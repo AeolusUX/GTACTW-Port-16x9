@@ -1462,7 +1462,7 @@ int main(int argc, char *argv[]) {
         "GTA: Chinatown Wars",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         720, 720,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP
+        SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN
     );
     if (!g_window) {
         fprintf(stderr, "SDL_CreateWindow: %s\n", SDL_GetError());
