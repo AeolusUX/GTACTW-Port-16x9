@@ -730,28 +730,12 @@ static void glViewportCenter(GLint x, GLint y, GLsizei w, GLsizei h) {
  * - big/fullscreen UI scissors, like savegame/autosave, are relaxed to avoid crop
  */
 static void glScissorCenter(GLint x, GLint y, GLsizei w, GLsizei h) {
-    if (w >= SCREEN_W - 4 && h >= SCREEN_H - 4) {
-        glScissor(0, 0, PHYS_W, PHYS_H);
-        return;
-    }
+    (void)x;
+    (void)y;
+    (void)w;
+    (void)h;
 
-    GLint ny = y + VIEW_Y;
-    GLsizei nh = h;
-
-    if (ny < 0) {
-        nh += ny;
-        ny = 0;
-    }
-
-    if (ny + nh > PHYS_H) {
-        nh = PHYS_H - ny;
-    }
-
-    if (nh < 0) {
-        nh = 0;
-    }
-
-    glScissor(x, ny, w, nh);
+    glScissor(0, 0, PHYS_W, PHYS_H);
 }
 
 /* ── Symbol table ────────────────────────────────────────────────────────── */
