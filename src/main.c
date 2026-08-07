@@ -1048,7 +1048,7 @@ static so_default_dynlib default_dynlib[] = {
     { "glGetUniformLocation",         (uintptr_t)glGetUniformLocation         },
     { "glLinkProgram",                (uintptr_t)glLinkProgramHook            },
     { "glRenderbufferStorage",        (uintptr_t)glRenderbufferStorage        },
-    { "glScissor",                    (uintptr_t)glScissorLetterbox           },
+    { "glScissor", (uintptr_t)glScissor },
     { "glShaderSource",               (uintptr_t)glShaderSourceHook           },
     { "glTexImage2D",                 (uintptr_t)glTexImage2DHook             },
     { "glTexParameterf",              (uintptr_t)glTexParameterf_abi          },
@@ -1063,7 +1063,7 @@ static so_default_dynlib default_dynlib[] = {
     { "glVertexAttrib3f",             (uintptr_t)glVertexAttrib3f_abi         },
     { "glVertexAttrib4f",             (uintptr_t)glVertexAttrib4f_abi         },
     { "glVertexAttribPointer",        (uintptr_t)glVertexAttribPointerHook    },
-    { "glViewport",                   (uintptr_t)glViewportLetterbox          },
+    { "glViewport", (uintptr_t)glViewport },
 
     /* ── Misc ABI ─────────────────────────────────────────────────────── */
     { "__assert2",            (uintptr_t)__assert2_impl                    },
