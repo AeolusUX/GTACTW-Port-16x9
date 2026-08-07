@@ -32,6 +32,9 @@ or your own sideload). They are NOT in this repo for copyright reasons.
 
 Install:
 1)Extract archive in /roms/ports/*
+
 2)Copy your legitimate files of GTA CTW 
+
 3)Refresh game list and run GTA Chinatown Wars
+
 
