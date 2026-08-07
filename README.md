@@ -31,6 +31,7 @@ or your own sideload). They are NOT in this repo for copyright reasons.
   the game needs
 
 Install:
+
 1)Extract archive in /roms/ports/*
 
 2)Copy your legitimate files of GTA CTW 
