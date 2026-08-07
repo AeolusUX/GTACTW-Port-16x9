@@ -1,8 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define SCREEN_W    640
-#define SCREEN_H    480
+#define SCREEN_W    720
+#define SCREEN_H    408
 
 /* Path to extracted game data on the device.
  * FileGetArchiveName(1) returns a filename relative to this + "/Android/obb/<pkg>/". */
