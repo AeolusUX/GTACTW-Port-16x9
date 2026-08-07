@@ -6,31 +6,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-
-    container:
-      image: debian:11
+    container: debian:11
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Enable armhf
+      - name: Install dependencies
         run: |
           dpkg --add-architecture armhf
           apt update
-
-      - name: Install deps
-        run: |
-          apt install -y \
-            make \
-            git \
-            gcc-arm-linux-gnueabihf \
-            libsdl2-dev:armhf \
-            libopenal-dev:armhf \
-            libgles2-mesa-dev:armhf \
-            libegl1-mesa-dev:armhf \
-            libmpg123-dev:armhf \
-            zlib1g-dev:armhf
+          apt install -y make git gcc-arm-linux-gnueabihf libsdl2-dev:armhf libopenal-dev:armhf libgles2-mesa-dev:armhf libegl1-mesa-dev:armhf libmpg123-dev:armhf zlib1g-dev:armhf
 
       - name: Build
         run: make SYSROOT=/
@@ -39,7 +25,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gtactw-r36
-          path: |
-            gtactw_r36
-            libclock_fix.so
-``
+          path: gtactw_r36
