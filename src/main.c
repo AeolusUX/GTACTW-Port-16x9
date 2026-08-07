@@ -706,6 +706,49 @@ static SOFTFP float  sinf_abi(float x)                    { return sinf(x);     
 static SOFTFP double tan_abi(double x)                    { return tan(x);         }
 static SOFTFP float  strtof_abi(const char *s, char **e)  { return strtof(s, e);   }
 
+/* ── Letterbox viewport/scissor for 720x720 screens ─────────────────────── */
+
+#define FB_W 720
+#define FB_H 720
+
+static void calc_letterbox(int *ox, int *oy, float *scale) {
+    float sx = (float)FB_W / (float)SCREEN_W;
+    float sy = (float)FB_H / (float)SCREEN_H;
+    float s = sx < sy ? sx : sy;
+
+    int view_w = (int)(SCREEN_W * s + 0.5f);
+    int view_h = (int)(SCREEN_H * s + 0.5f);
+
+    *ox = (FB_W - view_w) / 2;
+    *oy = (FB_H - view_h) / 2;
+    *scale = s;
+}
+
+static void glViewportLetterbox(GLint x, GLint y, GLsizei w, GLsizei h) {
+    int ox, oy;
+    float s;
+    calc_letterbox(&ox, &oy, &s);
+
+    GLint nx = ox + (GLint)(x * s + 0.5f);
+    GLint ny = oy + (GLint)(y * s + 0.5f);
+    GLsizei nw = (GLsizei)(w * s + 0.5f);
+    GLsizei nh = (GLsizei)(h * s + 0.5f);
+
+    glViewport(nx, ny, nw, nh);
+}
+
+static void glScissorLetterbox(GLint x, GLint y, GLsizei w, GLsizei h) {
+    int ox, oy;
+    float s;
+    calc_letterbox(&ox, &oy, &s);
+
+    GLint nx = ox + (GLint)(x * s + 0.5f);
+    GLint ny = oy + (GLint)(y * s + 0.5f);
+    GLsizei nw = (GLsizei)(w * s + 0.5f);
+    GLsizei nh = (GLsizei)(h * s + 0.5f);
+
+    glScissor(nx, ny, nw, nh);
+}
 /* ── Symbol table ────────────────────────────────────────────────────────── */
 
 static so_default_dynlib default_dynlib[] = {
@@ -1005,7 +1048,7 @@ static so_default_dynlib default_dynlib[] = {
     { "glGetUniformLocation",         (uintptr_t)glGetUniformLocation         },
     { "glLinkProgram",                (uintptr_t)glLinkProgramHook            },
     { "glRenderbufferStorage",        (uintptr_t)glRenderbufferStorage        },
-    { "glScissor",                    (uintptr_t)glScissor                    },
+    { "glScissor",                    (uintptr_t)glScissorLetterbox           },
     { "glShaderSource",               (uintptr_t)glShaderSourceHook           },
     { "glTexImage2D",                 (uintptr_t)glTexImage2DHook             },
     { "glTexParameterf",              (uintptr_t)glTexParameterf_abi          },
@@ -1020,7 +1063,7 @@ static so_default_dynlib default_dynlib[] = {
     { "glVertexAttrib3f",             (uintptr_t)glVertexAttrib3f_abi         },
     { "glVertexAttrib4f",             (uintptr_t)glVertexAttrib4f_abi         },
     { "glVertexAttribPointer",        (uintptr_t)glVertexAttribPointerHook    },
-    { "glViewport",                   (uintptr_t)glViewport                   },
+    { "glViewport",                   (uintptr_t)glViewportLetterbox          },
 
     /* ── Misc ABI ─────────────────────────────────────────────────────── */
     { "__assert2",            (uintptr_t)__assert2_impl                    },
