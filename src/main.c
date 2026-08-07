@@ -713,28 +713,29 @@ static SOFTFP float  sinf_abi(float x)                    { return sinf(x);     
 static SOFTFP double tan_abi(double x)                    { return tan(x);         }
 static SOFTFP float  strtof_abi(const char *s, char **e)  { return strtof(s, e);   }
 
-
-/* ── Dynamic center viewport/scissor on 720x720 screen ─────────────────── */
+/* ── Fixed center 720x408 game image on 720x720 screen ─────────────────── */
 
 #define PHYS_W 720
 #define PHYS_H 720
-
-static GLint g_view_offset_y = 0;
+#define VIEW_Y ((PHYS_H - SCREEN_H) / 2)
 
 static void glViewportCenter(GLint x, GLint y, GLsizei w, GLsizei h) {
-    GLint off_y = 0;
-
-    if (w > 0 && h > 0 && w <= PHYS_W && h <= PHYS_H) {
-        off_y = (PHYS_H - h) / 2;
-    }
-
-    g_view_offset_y = off_y;
-
-    glViewport(x, y + off_y, w, h);
+    glViewport(x, y + VIEW_Y, w, h);
 }
 
+/*
+ * Smart scissor:
+ * - viewport is always shifted by VIEW_Y
+ * - normal gameplay/menu scissor gets shifted too
+ * - big/fullscreen UI scissors, like savegame/autosave, are relaxed to avoid crop
+ */
 static void glScissorCenter(GLint x, GLint y, GLsizei w, GLsizei h) {
-    GLint ny = y + g_view_offset_y;
+    if (w >= SCREEN_W - 4 && h >= SCREEN_H - 4) {
+        glScissor(0, 0, PHYS_W, PHYS_H);
+        return;
+    }
+
+    GLint ny = y + VIEW_Y;
     GLsizei nh = h;
 
     if (ny < 0) {
@@ -752,6 +753,7 @@ static void glScissorCenter(GLint x, GLint y, GLsizei w, GLsizei h) {
 
     glScissor(x, ny, w, nh);
 }
+
 /* ── Symbol table ────────────────────────────────────────────────────────── */
 
 static so_default_dynlib default_dynlib[] = {
