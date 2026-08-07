@@ -749,6 +749,14 @@ static void glScissorLetterbox(GLint x, GLint y, GLsizei w, GLsizei h) {
 
     glScissor(nx, ny, nw, nh);
 }
+static void glScissorNoCrop(GLint x, GLint y, GLsizei w, GLsizei h) {
+    (void)x;
+    (void)y;
+    (void)w;
+    (void)h;
+
+    glScissor(0, 0, SCREEN_W, SCREEN_H);
+}
 /* ── Symbol table ────────────────────────────────────────────────────────── */
 
 static so_default_dynlib default_dynlib[] = {
