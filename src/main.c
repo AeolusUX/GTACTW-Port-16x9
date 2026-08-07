@@ -110,8 +110,15 @@ int __android_log_print(int prio, const char *tag, const char *fmt, ...) {
 
 /* ── Screen size (hooked into .so) ───────────────────────────────────────── */
 
-int OS_ScreenGetWidth(void)  { return 720; }
-int OS_ScreenGetHeight(void) { return 480; }
+int OS_ScreenGetWidth(void)
+{
+    return SCREEN_W;
+}
+
+int OS_ScreenGetHeight(void)
+{
+    return SCREEN_H;
+}
 
 /* ── Bionic pthread/semaphore ABI shims ──────────────────────────────────────
  * On Android bionic (32-bit): mutex=4 bytes, cond=4 bytes, sem=4 bytes.
