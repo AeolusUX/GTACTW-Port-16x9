@@ -11,7 +11,8 @@ jobs:
       image: debian:11
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Enable armhf
         run: |
@@ -21,20 +22,20 @@ jobs:
       - name: Install deps
         run: |
           apt install -y \
-          make git \
-          gcc-arm-linux-gnueabihf \
-          libsdl2-dev:armhf \
-          libopenal-dev:armhf \
-          libgles2-mesa-dev:armhf \
-          libegl1-mesa-dev:armhf \
-          libmpg123-dev:armhf \
-          zlib1g-dev:armhf
+            make \
+            git \
+            gcc-arm-linux-gnueabihf \
+            libsdl2-dev:armhf \
+            libopenal-dev:armhf \
+            libgles2-mesa-dev:armhf \
+            libegl1-mesa-dev:armhf \
+            libmpg123-dev:armhf \
+            zlib1g-dev:armhf
 
       - name: Build
-        run: |
-          make SYSROOT=/
+        run: make SYSROOT=/
 
-      - name: Upload
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: gtactw-r36
