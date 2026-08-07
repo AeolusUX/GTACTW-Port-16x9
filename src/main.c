@@ -503,10 +503,10 @@ int ProcessEvents(void) {
     /* Update gamepad state */
     if (g_gamepad) {
         int mask = 0;
-        if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_A))         mask |= 0x001;
-        if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_B))         mask |= 0x002;
-        if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_X))         mask |= 0x004;
-        if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_Y))         mask |= 0x008;
+        if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_B))         mask |= 0x001;
+        if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_A))         mask |= 0x002;
+        if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_Y))         mask |= 0x004;
+        if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_X))         mask |= 0x008;
         if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_START))     mask |= 0x010;
         if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_BACK))      mask |= 0x020;
         if (SDL_GameControllerGetButton(g_gamepad, SDL_CONTROLLER_BUTTON_LEFTSHOULDER))  mask |= 0x040;
@@ -714,18 +714,43 @@ static SOFTFP double tan_abi(double x)                    { return tan(x);      
 static SOFTFP float  strtof_abi(const char *s, char **e)  { return strtof(s, e);   }
 
 
-/* ── Center 720x408 game image on 720x720 screen ───────────────────────── */
+/* ── Dynamic center viewport/scissor on 720x720 screen ─────────────────── */
 
 #define PHYS_W 720
 #define PHYS_H 720
-#define VIEW_Y ((PHYS_H - SCREEN_H) / 2)
+
+static GLint g_view_offset_y = 0;
 
 static void glViewportCenter(GLint x, GLint y, GLsizei w, GLsizei h) {
-    glViewport(x, y + VIEW_Y, w, h);
+    GLint off_y = 0;
+
+    if (w > 0 && h > 0 && w <= PHYS_W && h <= PHYS_H) {
+        off_y = (PHYS_H - h) / 2;
+    }
+
+    g_view_offset_y = off_y;
+
+    glViewport(x, y + off_y, w, h);
 }
 
 static void glScissorCenter(GLint x, GLint y, GLsizei w, GLsizei h) {
-    glScissor(x, y + VIEW_Y, w, h);
+    GLint ny = y + g_view_offset_y;
+    GLsizei nh = h;
+
+    if (ny < 0) {
+        nh += ny;
+        ny = 0;
+    }
+
+    if (ny + nh > PHYS_H) {
+        nh = PHYS_H - ny;
+    }
+
+    if (nh < 0) {
+        nh = 0;
+    }
+
+    glScissor(x, ny, w, nh);
 }
 /* ── Symbol table ────────────────────────────────────────────────────────── */
 
