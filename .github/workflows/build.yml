@@ -9,14 +9,36 @@ jobs:
     container: debian:11
 
     steps:
+      - name: Point apt at Debian archive
+        run: |
+          cat > /etc/apt/sources.list <<'EOF'
+          deb http://archive.debian.org/debian bullseye main
+          deb http://archive.debian.org/debian-security bullseye-security main
+          EOF
+          echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+
+      - name: Install git and certificates
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates
+
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
           dpkg --add-architecture armhf
-          apt update
-          apt install -y make git gcc-arm-linux-gnueabihf binutils-arm-linux-gnueabihf libsdl2-dev:armhf libopenal-dev:armhf libgles2-mesa-dev:armhf libegl1-mesa-dev:armhf libmpg123-dev:armhf zlib1g-dev:armhf
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            make \
+            gcc-arm-linux-gnueabihf \
+            binutils-arm-linux-gnueabihf \
+            libsdl2-dev:armhf \
+            libopenal-dev:armhf \
+            libgles2-mesa-dev:armhf \
+            libegl1-mesa-dev:armhf \
+            libmpg123-dev:armhf \
+            zlib1g-dev:armhf
 
       - name: Build
         run: |
