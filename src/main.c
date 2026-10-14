@@ -715,7 +715,7 @@ static SOFTFP float  strtof_abi(const char *s, char **e)  { return strtof(s, e);
 
 /* ── Fixed center 720x408 game image on 720x720 screen ─────────────────── */
 
-#define PHYS_W 720
+#define PHYS_W 1280
 #define PHYS_H 720
 #define VIEW_Y ((PHYS_H - SCREEN_H) / 2)
 
